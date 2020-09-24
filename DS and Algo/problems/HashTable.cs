@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace DS_and_Algo.problems
 {
@@ -131,6 +130,80 @@ namespace DS_and_Algo.problems
                 }
             }
             return bulls + "A" + cows + "B";
+        }
+
+        /*
+         * Given a non-empty array of integers, return the k most frequent elements.
+         * Example 1:
+
+            Input: nums = [1,1,1,2,2,3], k = 2
+            Output: [1,2]
+            Example 2:
+            
+            Input: nums = [1], k = 1
+            Output: [1]
+         * **/
+        public static int[] TopKFrequent(int[] nums, int k)
+        {
+            List<int>[] bucket = new List<int>[nums.Length + 1];
+            Dictionary<int, int> numCountMap = new Dictionary<int, int>();
+            foreach (int num in nums) {
+                if (!numCountMap.TryAdd(num, 1)) {
+                    numCountMap[num]++;
+                }
+            }
+
+            foreach (KeyValuePair<int, int> numCountPair in numCountMap) {
+                if (bucket[numCountPair.Value] == null) bucket[numCountPair.Value] = new List<int>();
+                bucket[numCountPair.Value].Add(numCountPair.Key);
+            }
+            int[] result = new int[k];
+            for (int i = bucket.Length - 1 ; i > 0; i--) {
+                if (bucket[i] != null) {
+                    for (int j = 0; j < bucket[i].Count && k!=0; j++) {
+                        result[k-- - 1] = bucket[i][j];
+                    }
+                    if (k == 0) break;
+                }
+            }
+            return result;
+        }
+
+        /*
+         * Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+         * An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase,
+         * typically using all the original letters exactly once.
+         * Example 1:
+
+            Input: strs = ["eat","tea","tan","ate","nat","bat"]
+            Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+            Example 2:
+            
+            Input: strs = [""]
+            Output: [[""]]
+            Example 3:
+            
+            Input: strs = ["a"]
+            Output: [["a"]]
+         * **/
+        public static IList<IList<string>> GroupAnagrams(string[] strs)
+        {
+            Dictionary<string, IList<string>> anagrams = new Dictionary<string, IList<string>>();
+            foreach (string str in strs) {
+                char[] charArray = new char[26];
+                foreach(char c in str) {
+                    charArray[c - 'a']++;
+                }
+                string stringKey = new string(charArray);
+                if (anagrams.ContainsKey(stringKey))
+                {
+                    anagrams[stringKey].Add(str);
+                }
+                else {
+                    anagrams[stringKey] = new List<string>() { str };
+                }
+            }
+            return anagrams.Values.ToList();
         }
     }
 }
