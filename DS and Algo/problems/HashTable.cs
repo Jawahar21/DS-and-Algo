@@ -29,18 +29,20 @@ namespace DS_and_Algo.problems
         {
             Dictionary<int, int> numIndexPair = new Dictionary<int, int>();
             int[] result = new int[2];
-            for (int i = 0; i < nums.Length; i++) {
-                if(numIndexPair.ContainsKey(target - nums[i]))
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (numIndexPair.ContainsKey(target - nums[i]))
                 {
                     result[0] = i;
                     result[1] = numIndexPair[target - nums[i]];
                     return result;
                 }
-                if (!numIndexPair.ContainsKey(nums[i])) {
+                if (!numIndexPair.ContainsKey(nums[i]))
+                {
                     // handling duplicates
                     numIndexPair.Add(nums[i], i);
                 }
-                
+
             }
             return result;
         }
@@ -67,13 +69,13 @@ namespace DS_and_Algo.problems
             while (digitsSquaredNumbers.Add(n))
             {
                 int squaredSum = 0;
-                while(n > 0)
+                while (n > 0)
                 {
                     int d = n % 10;
                     squaredSum += d * d;
                     n /= 10;
                 }
-                if(squaredSum == 1)
+                if (squaredSum == 1)
                 {
                     return true;
                 }
@@ -96,18 +98,23 @@ namespace DS_and_Algo.problems
 
             Refer leetcode hashtable Bulls and Cows medium problem for examples
          * **/
-        public static string GetHint(string secret, string guess) {
+        public static string GetHint(string secret, string guess)
+        {
             Dictionary<char, int> mapOfNumberAndCount = new Dictionary<char, int>();
             int bulls = 0;
             int cows = 0;
-            for (int i = 0; i < secret.Length; i++) {
-                if (!mapOfNumberAndCount.TryAdd(secret[i], 1)) {
+            for (int i = 0; i < secret.Length; i++)
+            {
+                if (!mapOfNumberAndCount.TryAdd(secret[i], 1))
+                {
                     mapOfNumberAndCount[secret[i]]++;
                 }
             }
 
-            for (int i = 0; i < guess.Length; i++) {
-                if (mapOfNumberAndCount.ContainsKey(guess[i])) {
+            for (int i = 0; i < guess.Length; i++)
+            {
+                if (mapOfNumberAndCount.ContainsKey(guess[i]))
+                {
                     if (secret[i].Equals(guess[i]))
                     {
                         bulls++;
@@ -115,17 +122,19 @@ namespace DS_and_Algo.problems
                         {
                             mapOfNumberAndCount[guess[i]]--;
                         }
-                        else {
+                        else
+                        {
                             cows--;
                         }
                     }
-                    else {
-                        if (mapOfNumberAndCount[guess[i]] > 0) 
+                    else
+                    {
+                        if (mapOfNumberAndCount[guess[i]] > 0)
                         {
                             cows++;
                             mapOfNumberAndCount[guess[i]]--;
                         }
-                        
+
                     }
                 }
             }
@@ -147,20 +156,26 @@ namespace DS_and_Algo.problems
         {
             List<int>[] bucket = new List<int>[nums.Length + 1];
             Dictionary<int, int> numCountMap = new Dictionary<int, int>();
-            foreach (int num in nums) {
-                if (!numCountMap.TryAdd(num, 1)) {
+            foreach (int num in nums)
+            {
+                if (!numCountMap.TryAdd(num, 1))
+                {
                     numCountMap[num]++;
                 }
             }
 
-            foreach (KeyValuePair<int, int> numCountPair in numCountMap) {
+            foreach (KeyValuePair<int, int> numCountPair in numCountMap)
+            {
                 if (bucket[numCountPair.Value] == null) bucket[numCountPair.Value] = new List<int>();
                 bucket[numCountPair.Value].Add(numCountPair.Key);
             }
             int[] result = new int[k];
-            for (int i = bucket.Length - 1 ; i > 0; i--) {
-                if (bucket[i] != null) {
-                    for (int j = 0; j < bucket[i].Count && k!=0; j++) {
+            for (int i = bucket.Length - 1; i > 0; i--)
+            {
+                if (bucket[i] != null)
+                {
+                    for (int j = 0; j < bucket[i].Count && k != 0; j++)
+                    {
                         result[k-- - 1] = bucket[i][j];
                     }
                     if (k == 0) break;
@@ -189,9 +204,11 @@ namespace DS_and_Algo.problems
         public static IList<IList<string>> GroupAnagrams(string[] strs)
         {
             Dictionary<string, IList<string>> anagrams = new Dictionary<string, IList<string>>();
-            foreach (string str in strs) {
+            foreach (string str in strs)
+            {
                 char[] charArray = new char[26];
-                foreach(char c in str) {
+                foreach (char c in str)
+                {
                     charArray[c - 'a']++;
                 }
                 string stringKey = new string(charArray);
@@ -199,11 +216,47 @@ namespace DS_and_Algo.problems
                 {
                     anagrams[stringKey].Add(str);
                 }
-                else {
+                else
+                {
                     anagrams[stringKey] = new List<string>() { str };
                 }
             }
             return anagrams.Values.ToList();
+        }
+
+        /*
+         * Determine if a 9x9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+
+            Each row must contain the digits 1-9 without repetition.
+            Each column must contain the digits 1-9 without repetition.
+            Each of the 9 3x3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+
+            Solution explanation: The idea is to create a hash key for each position such that,
+                when duplicate hash is found when repeated in row, or in column, or in 3X3 grid of sudoku
+            - hash 4 in 7th row as 7(4) - ensures uniqueness in row
+            - hash 4 in 1st column as (4)1 - ensures uniqueness in column
+            - hash 4 in 7th row 1st column  as 7/3 (4) 1/3 which is 2(4)0 - ensures uniqueness in 3X3 grid.   
+         * **/
+        public static bool IsValidSudoku(char[][] board)
+        {
+            HashSet<string> keys = new HashSet<string>();
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (board[i][j] != '.')
+                    {
+                        string num = "(" + board[i][j] + ")";
+
+                        if (!keys.Add(i + num) || !keys.Add(num + j) || !keys.Add(i / 3 + num + j / 3))
+                        {
+                            return false;
+                        }
+                    }
+
+                }
+            }
+            return true;
         }
     }
 }
