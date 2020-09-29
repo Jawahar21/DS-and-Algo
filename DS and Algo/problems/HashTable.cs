@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace DS_and_Algo.problems
 {
@@ -257,6 +258,72 @@ namespace DS_and_Algo.problems
                 }
             }
             return true;
+        }
+
+        /*
+         * Given a string, sort it in decreasing order based on the frequency of characters.
+
+            Example 1:
+            Input:
+            "tree"
+            
+            Output:
+            "eert"
+            
+            Explanation:
+            'e' appears twice while 'r' and 't' both appear once.
+            So 'e' must appear before both 'r' and 't'. Therefore "eetr" is also a valid answer.
+            
+            Example 2:
+            Input:
+            "cccaaa"
+            
+            Output:
+            "cccaaa"
+            
+            Explanation:
+            Both 'c' and 'a' appear three times, so "aaaccc" is also a valid answer.
+            Note that "cacaca" is incorrect, as the same characters must be together.
+            
+            Example 3:
+            Input:
+            "Aabb"
+            
+            Output:
+            "bbAa"
+            
+            Explanation:
+            "bbaA" is also a valid answer, but "Aabb" is incorrect.
+            Note that 'A' and 'a' are treated as two different characters
+
+            Solution: To use bucket sort
+         * **/
+        public static string FrequencySort(string s)
+        {
+            StringBuilder sb = new StringBuilder();
+            List<char>[] buckets = new List<char>[s.Length + 1];
+            Dictionary<char, int> charFrequencyMap = new Dictionary<char, int>();
+            foreach (char c in s) {
+                if (!charFrequencyMap.TryAdd(c, 1)) {
+                    charFrequencyMap[c]++;
+                }
+            }
+
+            foreach (KeyValuePair<char, int> charFrequencyPair in charFrequencyMap) {
+                if (buckets[charFrequencyPair.Value] == null) {
+                    buckets[charFrequencyPair.Value] = new List<char>();
+                }
+                for (int i = 0; i < charFrequencyPair.Value; i++) {
+                    buckets[charFrequencyPair.Value].Add(charFrequencyPair.Key);
+                }
+            }
+
+            for (int i = buckets.Length-1; i > 0; i--) {
+                if (buckets[i] != null) {
+                    sb.Append(buckets[i].ToArray());
+                }
+            }
+            return sb.ToString();
         }
     }
 }
