@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -303,27 +304,71 @@ namespace DS_and_Algo.problems
             StringBuilder sb = new StringBuilder();
             List<char>[] buckets = new List<char>[s.Length + 1];
             Dictionary<char, int> charFrequencyMap = new Dictionary<char, int>();
-            foreach (char c in s) {
-                if (!charFrequencyMap.TryAdd(c, 1)) {
+            foreach (char c in s)
+            {
+                if (!charFrequencyMap.TryAdd(c, 1))
+                {
                     charFrequencyMap[c]++;
                 }
             }
 
-            foreach (KeyValuePair<char, int> charFrequencyPair in charFrequencyMap) {
-                if (buckets[charFrequencyPair.Value] == null) {
+            foreach (KeyValuePair<char, int> charFrequencyPair in charFrequencyMap)
+            {
+                if (buckets[charFrequencyPair.Value] == null)
+                {
                     buckets[charFrequencyPair.Value] = new List<char>();
                 }
-                for (int i = 0; i < charFrequencyPair.Value; i++) {
+                for (int i = 0; i < charFrequencyPair.Value; i++)
+                {
                     buckets[charFrequencyPair.Value].Add(charFrequencyPair.Key);
                 }
             }
 
-            for (int i = buckets.Length-1; i > 0; i--) {
-                if (buckets[i] != null) {
+            for (int i = buckets.Length - 1; i > 0; i--)
+            {
+                if (buckets[i] != null)
+                {
                     sb.Append(buckets[i].ToArray());
                 }
             }
             return sb.ToString();
+        }
+
+        /**
+         * Given an array of citations (each citation is a non-negative integer) of a researcher, write a function to compute the researcher's h-index.
+
+            According to the definition of h-index on Wikipedia: "A scientist has index h if h of his/her N papers have at least h citations each, and the other N − h papers have no more than h citations each."
+            
+            Example:
+            
+            Input: citations = [3,0,6,1,5]
+            Output: 3 
+            Explanation: [3,0,6,1,5] means the researcher has 5 papers in total and each of them had 
+                         received 3, 0, 6, 1, 5 citations respectively. 
+                         Since the researcher has 3 papers with at least 3 citations each and the remaining 
+                         two with no more than 3 citations each, her h-index is 3.
+            Note: If there are several possible values for h, the maximum one is taken as the h-index.
+         */
+        public static int HIndex(int[] citations)
+        {
+            int[] buckets = new int[citations.Length + 1];
+            foreach (int citation in citations) {
+                if (citation > citations.Length)
+                {
+                    buckets[citations.Length]++;
+                }
+                else {
+                    buckets[citation]++;
+                }
+            }
+            int count = 0;
+            for (int i = buckets.Length-1; i >= 0; i--) {
+                count += buckets[i];
+                if (count >= i) {
+                    return i;
+                }
+            }
+            return 0;
         }
     }
 }
