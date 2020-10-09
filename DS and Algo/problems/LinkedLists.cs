@@ -130,5 +130,27 @@ namespace DS_and_Algo.problems
             }
             return false;
         }
+
+        /**
+         * Given the head of a linked list, remove the nth node from the end of the list and return its head.
+         * Input: head = [1,2,3,4,5], n = 2
+         * Output: [1,2,3,5]
+         */
+        public static ListNode RemoveNthFromEnd(ListNode head, int n)
+        {
+            if (head == null) return head;
+            int length = backTraversal(head, n);
+            if (length == n) head = head.next;
+            return head;
+
+        }
+        private static int backTraversal(ListNode curr, int n) {
+            if (curr == null) return 0;
+            int index = backTraversal(curr.next, n) + 1;
+            if (index == n + 1) {
+                curr.next = curr.next.next;
+            }
+            return index;
+        }
     }
 }
