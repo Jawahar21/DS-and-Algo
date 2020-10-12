@@ -168,5 +168,60 @@ namespace DS_and_Algo.problems
             nextNode.next = head;
             return nextNode;
         }
+
+        /*
+         * Given a linked list, rotate the list to the right by k places, where k is non-negative.
+
+            Example 1:
+            
+            Input: 1->2->3->4->5->NULL, k = 2
+            Output: 4->5->1->2->3->NULL
+            Explanation:
+            rotate 1 steps to the right: 5->1->2->3->4->NULL
+            rotate 2 steps to the right: 4->5->1->2->3->NULL
+         * **/
+        public static ListNode RotateRight(ListNode head, int k)
+        {
+            if (head == null || head.next == null) return head;
+            if (k == 0) return head;
+            int length = GetLength(head);
+            int newListEndIndex;
+            if (k < length) {
+                newListEndIndex = length - k;
+            }
+            else if (length == k)
+            {
+                return head;
+            }
+            else
+            {
+                newListEndIndex = length - (k % length);
+            }
+
+            if (length == newListEndIndex) return head;
+
+            ListNode curr = head;
+            while(newListEndIndex > 1)
+            {
+                curr = curr.next;
+                newListEndIndex--;
+            }
+
+            ListNode newHead = curr.next;
+            curr.next = null;
+            curr = newHead;
+            while(curr.next != null)
+            {
+                curr = curr.next;
+            }
+            curr.next = head;
+            return newHead;
+        }
+
+        private static int GetLength(ListNode head) {
+            if (head == null) return 0;
+            if (head.next == null) return 1;
+            return 1 + GetLength(head.next);
+        }
     }
 }
