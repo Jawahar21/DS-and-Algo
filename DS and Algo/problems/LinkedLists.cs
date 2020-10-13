@@ -78,19 +78,19 @@ namespace DS_and_Algo.problems
             int x, y, carry = 0, sum;
             while (l1 != null || l2 != null)
             {
-                if (l1 != null) 
-                { 
-                    x = l1.val; 
-                    l1 = l1.next; 
-                } 
-                else 
+                if (l1 != null)
+                {
+                    x = l1.val;
+                    l1 = l1.next;
+                }
+                else
                     x = 0;
-                if (l2 != null) 
-                { 
-                    y = l2.val; 
-                    l2 = l2.next; 
-                } 
-                else 
+                if (l2 != null)
+                {
+                    y = l2.val;
+                    l2 = l2.next;
+                }
+                else
                     y = 0;
 
                 sum = carry + x + y;
@@ -117,12 +117,15 @@ namespace DS_and_Algo.problems
          * Output: true
          * Explanation: There is a cycle in the linked list, where the tail connects to the 0th node.
          * **/
-        public static bool HasCycle(ListNode head) {
+        public static bool HasCycle(ListNode head)
+        {
             ListNode slow = head;
             ListNode fast = head;
 
-            while (fast != null && fast.next != null) {
-                if (fast == slow) {
+            while (fast != null && fast.next != null)
+            {
+                if (fast == slow)
+                {
                     return true;
                 }
                 slow = slow.next;
@@ -144,10 +147,12 @@ namespace DS_and_Algo.problems
             return head;
 
         }
-        private static int backTraversal(ListNode curr, int n) {
+        private static int backTraversal(ListNode curr, int n)
+        {
             if (curr == null) return 0;
             int index = backTraversal(curr.next, n) + 1;
-            if (index == n + 1) {
+            if (index == n + 1)
+            {
                 curr.next = curr.next.next;
             }
             return index;
@@ -186,7 +191,8 @@ namespace DS_and_Algo.problems
             if (k == 0) return head;
             int length = GetLength(head);
             int newListEndIndex;
-            if (k < length) {
+            if (k < length)
+            {
                 newListEndIndex = length - k;
             }
             else if (length == k)
@@ -201,7 +207,7 @@ namespace DS_and_Algo.problems
             if (length == newListEndIndex) return head;
 
             ListNode curr = head;
-            while(newListEndIndex > 1)
+            while (newListEndIndex > 1)
             {
                 curr = curr.next;
                 newListEndIndex--;
@@ -210,7 +216,7 @@ namespace DS_and_Algo.problems
             ListNode newHead = curr.next;
             curr.next = null;
             curr = newHead;
-            while(curr.next != null)
+            while (curr.next != null)
             {
                 curr = curr.next;
             }
@@ -218,10 +224,43 @@ namespace DS_and_Algo.problems
             return newHead;
         }
 
-        private static int GetLength(ListNode head) {
+        private static int GetLength(ListNode head)
+        {
             if (head == null) return 0;
             if (head.next == null) return 1;
             return 1 + GetLength(head.next);
+        }
+
+
+        /*
+         * Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
+         * Return the linked list sorted as well.
+         * Example 1:
+         * Input: 1->2->3->3->4->4->5
+         * Output: 1->2->5
+         */
+        public static ListNode DeleteDuplicates2(ListNode head)
+        {
+            if (head == null || head.next == null) return head;
+            ListNode distinctList = new ListNode(0);
+            while (head != null || head.next != null)
+            {
+                if (head.val != head.next.val)
+                {
+                    distinctList.next = head;
+                    head = head.next;
+                    distinctList = distinctList.next;
+                }
+                else
+                {
+                    while (head.val != head.next.val)
+                    {
+                        head = head.next;
+                    }
+                    head = head.next;
+                }
+            }
+            return distinctList.next;
         }
     }
 }
