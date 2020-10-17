@@ -323,5 +323,38 @@ namespace DS_and_Algo.problems
             listLessThanX.next = greaterListHead.next;
             return resultList.next;
         }
+
+        /*
+         * Reverse a singly linked list.
+            
+            Example:
+            Input: 1->2->3->4->5->NULL
+            Output: 5->4->3->2->1->NULL
+         */
+        public static ListNode ReverseList(ListNode head)
+        {
+            ListNode newList = null;
+            while (head != null) {
+                ListNode next = head.next;
+                head.next = newList;
+                newList = head;
+                head = next;
+            }
+            return newList;
+        }
+
+        public static ListNode ReverseListRecursively(ListNode head)
+        {
+            return ReverseRecursively(head, null);
+        }
+
+        private static ListNode ReverseRecursively(ListNode head, ListNode newHead)
+        {
+            if (head == null) return newHead;
+            ListNode next = head.next;
+            head.next = newHead;
+            newHead = ReverseRecursively(next, head);
+            return newHead;
+        }
     }
 }
