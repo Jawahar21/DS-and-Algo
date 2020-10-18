@@ -276,13 +276,13 @@ namespace DS_and_Algo.problems
         {
             if (head == null || head.next == null) return null;
             ListNode start = head, slow = head, fast = head;
-            while(fast!= null && fast.next != null)
+            while (fast != null && fast.next != null)
             {
                 slow = slow.next;
                 fast = fast.next.next;
-                if(slow == fast)
+                if (slow == fast)
                 {
-                    while(slow!=start)
+                    while (slow != start)
                     {
                         start = start.next;
                         slow = slow.next;
@@ -306,9 +306,9 @@ namespace DS_and_Algo.problems
             ListNode resultList = listLessThanX;
             ListNode listGreaterOrEqualToX = new ListNode(0);
             ListNode greaterListHead = listGreaterOrEqualToX;
-            while (head!= null)
+            while (head != null)
             {
-                if(head.val < x)
+                if (head.val < x)
                 {
                     listLessThanX.next = head;
                     listLessThanX = listLessThanX.next;
@@ -334,7 +334,8 @@ namespace DS_and_Algo.problems
         public static ListNode ReverseList(ListNode head)
         {
             ListNode newList = null;
-            while (head != null) {
+            while (head != null)
+            {
                 ListNode next = head.next;
                 head.next = newList;
                 newList = head;
@@ -355,6 +356,76 @@ namespace DS_and_Algo.problems
             head.next = newHead;
             newHead = ReverseRecursively(next, head);
             return newHead;
+        }
+
+
+        /*
+         * Reverse a linked list from position m to n. Do it in one-pass.
+           Note: 1 ≤ m ≤ n ≤ length of list.
+      
+           Example:
+      
+           Input: 1->2->3->4->5->NULL, m = 2, n = 4
+           Output: 1->4->3->2->5->NULL
+         ***/
+        public static ListNode ReverseBetween(ListNode head, int m, int n)
+        {
+            if (head == null || head.next == null)
+            {
+                return head;
+            }
+            ListNode curr = head;
+            ListNode reverseListHead = null;
+            ListNode mainListEnd = null;
+            int index = 1;
+            while (curr != null)
+            {
+                if (index == m - 1)
+                {
+                    mainListEnd = curr;
+                }
+
+                if (index == m)
+                {
+                    ListNode reverseListEnd = curr;
+                    while (index <= n)
+                    {
+                        ListNode next = curr.next;
+                        curr.next = reverseListHead;
+                        reverseListHead = curr;
+                        curr = next;
+                        index++;
+                    }
+                    reverseListEnd.next = curr;
+                }
+                else
+                {
+                    index++;
+                    curr = curr.next;
+                }
+            }
+
+            if (m == 1)
+            {
+                return reverseListHead;
+            }
+            else
+            {
+                mainListEnd.next = reverseListHead;
+                return head;
+            }
+        }
+
+        public static ListNode CreateLinkedList(List<int> numbers)
+        {
+            ListNode head = new ListNode(0);
+            ListNode curr = head;
+            foreach (int num in numbers)
+            {
+                curr.next = new ListNode(num);
+                curr = curr.next;
+            }
+            return head.next;
         }
     }
 }
