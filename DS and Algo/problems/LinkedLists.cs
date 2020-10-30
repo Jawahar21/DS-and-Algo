@@ -479,6 +479,96 @@ namespace DS_and_Algo.problems
             return oldNewNodeMap[head];
         }
 
-        
+        /*
+         * We are given a linked list with head as the first node.  
+         * Let's number the nodes in the list: node_1, node_2, node_3, ... etc.
+         * Each node may have a next larger value: for node_i, next_larger(node_i) is the node_j.val 
+         * such that j > i, node_j.val > node_i.val, and j is the smallest possible choice.  
+         * If such a j does not exist, the next larger value is 0.
+         * Return an array of integers answer, where answer[i] = next_larger(node_{i+1}).
+         * Note that in the example inputs (not outputs) below, arrays such as [2,1,5]
+         * represent the serialization of a linked list with a head node value of 2, second node value of 1, and third node value of 5.
+         * 
+         * Example 1:
+         * Input: [2,1,5]
+         * Output: [5,5,0]
+         * 
+         * Input: [2,7,4,3,5]
+         * Output: [7,0,5,5,0]
+         * **/
+        public static int[] NextLargerNodes(ListNode head)
+        {
+            List<int> numbers = new List<int>();
+            Stack<int> indexesStack = new Stack<int>();
+            int index = 0;
+            while (head != null)
+            {
+                while (indexesStack.Count != 0 && numbers[indexesStack.Peek()] < head.val)
+                {
+                    numbers[indexesStack.Peek()] = head.val;
+                    indexesStack.Pop();
+                }
+
+                indexesStack.Push(index);
+                numbers.Add(head.val);
+                head = head.next;
+                index++;
+            }
+
+            while (indexesStack.Count != 0)
+            {
+                numbers[indexesStack.Pop()] = 0;
+            }
+
+            return numbers.ToArray();
+        }
+
+        /// <summary>
+        /// Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+        /// reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+        /// You may not modify the values in the list's nodes, only nodes itself may be changed.
+        /// Example 1:
+        /// Given 1->2->3->4, reorder it to 1->4->2->3.
+        /// 
+        /// Example 2:
+        /// Given 1->2->3->4->5, reorder it to 1->5->2->4->3.
+        /// </summary>
+        /// <param name="head"></param>
+        public static void ReorderList(ListNode head)
+        {
+            ListNode slow = head;
+            ListNode fast = head;
+            ListNode prev = head;
+            while(fast != null && fast.next!= null)
+            {
+                prev = slow;
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+
+            prev.next = null;
+
+            ListNode secondHalfHead = null;
+            while(slow != null)
+            {
+                ListNode next = slow.next;
+                slow.next = secondHalfHead;
+                secondHalfHead = slow;
+                slow = next;
+            }
+
+            while(head != null)
+            {
+                ListNode n1 = head.next, n2 = secondHalfHead.next;
+                head.next = secondHalfHead;
+
+                if (n1 == null)
+                    break;
+
+                secondHalfHead.next = n1;
+                head = n1;
+                secondHalfHead = n2;
+            }
+        }
     }
 }
