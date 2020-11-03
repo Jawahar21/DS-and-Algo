@@ -539,7 +539,7 @@ namespace DS_and_Algo.problems
             ListNode slow = head;
             ListNode fast = head;
             ListNode prev = head;
-            while(fast != null && fast.next!= null)
+            while (fast != null && fast.next != null)
             {
                 prev = slow;
                 slow = slow.next;
@@ -549,7 +549,7 @@ namespace DS_and_Algo.problems
             prev.next = null;
 
             ListNode secondHalfHead = null;
-            while(slow != null)
+            while (slow != null)
             {
                 ListNode next = slow.next;
                 slow.next = secondHalfHead;
@@ -557,7 +557,7 @@ namespace DS_and_Algo.problems
                 slow = next;
             }
 
-            while(head != null)
+            while (head != null)
             {
                 ListNode n1 = head.next, n2 = secondHalfHead.next;
                 head.next = secondHalfHead;
@@ -569,6 +569,105 @@ namespace DS_and_Algo.problems
                 head = n1;
                 secondHalfHead = n2;
             }
+        }
+
+        /// <summary>
+        /// Given a singly linked list, group all odd nodes together followed by the even nodes. Please note here we are talking about the node number and not the value in the nodes.
+        /// You should try to do it in place.The program should run in O(1) space complexity and O(nodes) time complexity.
+        /// Example 1:
+        /// Input: 1->2->3->4->5->NULL
+        /// Output: 1->3->5->2->4->NULL
+        /// Example 2:
+        /// Input: 2->1->3->5->6->4->7->NULL
+        /// Output: 2->3->6->7->1->5->4->NULL
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static ListNode OddEvenList(ListNode head)
+        {
+            if (head == null || head.next == null || head.next.next == null) { return head; }
+
+            ListNode oddListHead = new ListNode(0);
+            ListNode evenListHead = new ListNode(0);
+            ListNode oddListIter = oddListHead;
+            ListNode evenListIter = evenListHead;
+
+            int index = 1;
+            while (head != null)
+            {
+                if (index % 2 == 0)
+                {
+                    evenListIter.next = head;
+                    evenListIter = evenListIter.next;
+                }
+                else
+                {
+                    oddListIter.next = head;
+                    oddListIter = oddListIter.next;
+                }
+                head = head.next;
+                index++;
+            }
+            evenListIter.next = null;
+            oddListIter.next = evenListHead.next;
+            return oddListHead.next;
+        }
+
+        /// <summary>
+        /// Given a (singly) linked list with head node root, write a function to split the linked list into k consecutive linked list "parts".
+        /// The length of each part should be as equal as possible: no two parts should have a size differing by more than 1. This may lead to some parts being null.
+        /// The parts should be in order of occurrence in the input list, and parts occurring earlier should always have a size greater than or equal parts occurring later.
+        /// Return a List of ListNode's representing the linked list parts that are formed.
+        /// Examples 1->2->3->4, k = 5 // 5 equal parts [ [1], [2], [3], [4], null ]
+        /// Example 1:
+        /// Input:
+        /// root = [1, 2, 3], k = 5
+        /// Output: [[1],[2],[3],[],[]]
+        /// Explanation:
+        /// The input and each element of the output are ListNodes, not arrays.
+        /// For example, the input root has root.val = 1, root.next.val = 2, \root.next.next.val = 3, and root.next.next.next = null.
+        /// The first element output[0] has output[0].val = 1, output[0].next = null.
+        /// The last element output[4] is null, but it's string representation as a ListNode is [].
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static ListNode[] SplitListToParts(ListNode root, int k)
+        {
+            int length = 0;
+            ListNode iter = root;
+            while (iter != null)
+            {
+                iter = iter.next;
+                length++;
+            }
+
+            int noOfItemsPerList = length / k;
+            int remainders = length % k;
+            ListNode[] resLists = new ListNode[k];
+            for (int i = 0; i < k; i++)
+            {
+                ListNode subListHead = new ListNode(0);
+                ListNode subListIter = subListHead;
+                for (int j = 0; j < noOfItemsPerList && root != null; j++)
+                {
+                    subListIter.next = root;
+                    root = root.next;
+                    subListIter = subListIter.next;
+                }
+
+                if (root != null && remainders > 0)
+                {
+                    subListIter.next = root;
+                    root = root.next;
+                    subListIter = subListIter.next;
+                    remainders--;
+                }
+                subListIter.next = null;
+                resLists[i] = subListHead.next;
+            }
+
+            return resLists;
         }
     }
 }
