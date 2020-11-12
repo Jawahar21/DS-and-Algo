@@ -1,4 +1,6 @@
-﻿namespace DS_and_Algo.problems
+﻿using System;
+
+namespace DS_and_Algo.problems
 {
     public class TreeNode
     {
@@ -10,6 +12,25 @@
             this.val = val;
             this.left = left;
             this.right = right;
+        }
+    }
+
+    public class Node
+    {
+        public int val;
+        public IList<Node> children;
+
+        public Node() { }
+
+        public Node(int _val)
+        {
+            val = _val;
+        }
+
+        public Node(int _val, IList<Node> _children)
+        {
+            val = _val;
+            children = _children;
         }
     }
 
@@ -43,18 +64,55 @@
         /// </summary>
         /// <param name="root"></param>
         /// <returns></returns>
-        public bool IsSymmetric(TreeNode root)
+        public static bool IsSymmetric(TreeNode root)
         {
             if (root == null) return true;
 
             return IsMirror(root.left, root.right);
         }
 
-        private bool IsMirror(TreeNode left, TreeNode right)
+        private static bool IsMirror(TreeNode left, TreeNode right)
         {
             if (left == null && right == null) return true;
             if (left?.val != right?.val) return false;
             return IsMirror(left.left, right.right) && IsMirror(left.right, right.left);
+        }
+
+        /// <summary>
+        /// Given a binary tree, find its maximum depth.
+        ///The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+        /// Note: A leaf is a node with no children.
+        /// 
+        /// Given binary tree [3,9,20,null,null,15,7],
+        ///     3
+        ///    / \
+        ///   9  20
+        ///  /  \
+        /// 15   7
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static int MaxDepth(TreeNode root)
+        {
+            if (root == null) return 0;
+            return 1 + Math.Max(MaxDepth(root.left), MaxDepth(root.right));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static int MaxDepth(Node root)
+        {
+            if (root == null) return 0;
+            int maxDepth = 0;
+            foreach(Node childNode in root.children)
+            {
+                maxDepth = Math.Max(maxDepth, MaxDepth(childNode));
+            }
+            maxDepth++;
+            return maxDepth;
         }
     }
 }
