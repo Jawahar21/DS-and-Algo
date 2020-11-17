@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DS_and_Algo.problems
 {
@@ -15,19 +16,19 @@ namespace DS_and_Algo.problems
         }
     }
 
-    public class Node
+    public class NTreeNode
     {
         public int val;
-        public IList<Node> children;
+        public IList<NTreeNode> children;
 
-        public Node() { }
+        public NTreeNode() { }
 
-        public Node(int _val)
+        public NTreeNode(int _val)
         {
             val = _val;
         }
 
-        public Node(int _val, IList<Node> _children)
+        public NTreeNode(int _val, IList<NTreeNode> _children)
         {
             val = _val;
             children = _children;
@@ -103,16 +104,41 @@ namespace DS_and_Algo.problems
         /// </summary>
         /// <param name="root"></param>
         /// <returns></returns>
-        public static int MaxDepth(Node root)
+        public static int MaxDepth(NTreeNode root)
         {
             if (root == null) return 0;
             int maxDepth = 0;
-            foreach(Node childNode in root.children)
+            foreach(NTreeNode childNode in root.children)
             {
                 maxDepth = Math.Max(maxDepth, MaxDepth(childNode));
             }
             maxDepth++;
             return maxDepth;
+        }
+
+        /// <summary>
+        /// Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
+        /// For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static TreeNode SortedArrayToBST(int[] nums)
+        {
+            if (nums.Length == 0) return null;
+            TreeNode res = RecursiveTreeFormationHelper(nums, 0, nums.Length -1 );
+            return res;
+        }
+
+        private static TreeNode RecursiveTreeFormationHelper(int[] nums, int low, int high)
+        {
+            if (low > high) return null;
+
+            int mid = low + (high - low) / 2;
+
+            TreeNode root = new TreeNode(nums[mid]);
+            root.left = RecursiveTreeFormationHelper(nums, low, mid - 1);
+            root.right = RecursiveTreeFormationHelper(nums, mid + 1, high);
+            return root;
         }
     }
 }
