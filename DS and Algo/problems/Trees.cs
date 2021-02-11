@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DS_and_Algo.problems
 {
@@ -47,7 +48,7 @@ namespace DS_and_Algo.problems
         public static bool IsSameTree(TreeNode p, TreeNode q)
         {
             if (p == null && q == null) return true;
-            if(p?.val == q?.val)
+            if (p?.val == q?.val)
             {
                 return (IsSameTree(p.left, q.left) && IsSameTree(p.right, q.right));
             }
@@ -108,7 +109,7 @@ namespace DS_and_Algo.problems
         {
             if (root == null) return 0;
             int maxDepth = 0;
-            foreach(NTreeNode childNode in root.children)
+            foreach (NTreeNode childNode in root.children)
             {
                 maxDepth = Math.Max(maxDepth, MaxDepth(childNode));
             }
@@ -125,7 +126,7 @@ namespace DS_and_Algo.problems
         public static TreeNode SortedArrayToBST(int[] nums)
         {
             if (nums.Length == 0) return null;
-            TreeNode res = RecursiveTreeFormationHelper(nums, 0, nums.Length -1 );
+            TreeNode res = RecursiveTreeFormationHelper(nums, 0, nums.Length - 1);
             return res;
         }
 
@@ -139,6 +140,21 @@ namespace DS_and_Algo.problems
             root.left = RecursiveTreeFormationHelper(nums, low, mid - 1);
             root.right = RecursiveTreeFormationHelper(nums, mid + 1, high);
             return root;
+        }
+
+        /// <summary>
+        /// Given a binary tree, find its minimum depth.
+        /// The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+        /// Note: A leaf is a node with no children.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static int MinDepth(TreeNode root)
+        {
+            if (root == null) return int.MaxValue;
+            if (root.left == null || root.right == null) return 1;
+
+            return 1 + Math.Min(MinDepth(root.left), MinDepth(root.right));
         }
     }
 }
