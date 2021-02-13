@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 
 namespace DS_and_Algo.problems
@@ -264,6 +265,76 @@ namespace DS_and_Algo.problems
             }
             return A;
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="heights"></param>
+        /// <returns></returns>
+        public static int HeightChecker(int[] heights)
+        {
+            int[] replica = new int[heights.Length];
+            Array.Copy(heights, replica, heights.Length);
+            int result = 0;
+            Array.Sort(replica);
+            for (int i = 0; i < heights.Length; i++)
+            {
+                if (heights[i] != replica[i])
+                {
+                    result++;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static int ThirdMax(int[] nums)
+        {
+            List<int> greatest3 = new List<int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (greatest3.Count == 3)
+                {
+                    if (!greatest3.Contains(nums[i]) && nums[i] > greatest3[0])
+                    {
+                        greatest3[0] = nums[i];
+                        greatest3.Sort();
+                    }
+                }
+                else if (!greatest3.Contains(nums[i]))
+                {
+                    greatest3.Add(nums[i]);
+                    greatest3.Sort();
+                }
+            }
+            return (greatest3.Count == 3) ? greatest3[0] : greatest3.Last();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static IList<int> FindDisappearedNumbers(int[] nums)
+        {
+            IList<int> result = new List<int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                nums[Math.Abs(nums[i]) - 1] = -1 * Math.Abs(nums[Math.Abs(nums[i]) - 1]);
+            }
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (nums[i] > 0)
+                {
+                    result.Add(i + 1);
+                }
+            }
+            return result;
         }
 
         #endregion
