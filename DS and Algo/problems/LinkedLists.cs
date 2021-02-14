@@ -669,5 +669,109 @@ namespace DS_and_Algo.problems
 
             return resLists;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="headA"></param>
+        /// <param name="headB"></param>
+        public static ListNode GetIntersectionNode(ListNode headA, ListNode headB)
+        {
+            int aLen = GetLength(headA);
+            int bLen = GetLength(headB);
+            int diff = Math.Abs(aLen - bLen);
+
+            ListNode aCurr = headA;
+            ListNode bCurr = headB;
+            if (aLen > bLen)
+            {
+                while (diff > 0)
+                {
+                    aCurr = aCurr.next;
+                    diff--;
+                }
+            }
+            else if (aLen < bLen)
+            {
+                while (diff > 0)
+                {
+                    bCurr = bCurr.next;
+                    diff--;
+                }
+            }
+
+            while (aCurr != null && bCurr != null)
+            {
+                if (aCurr == bCurr) break;
+                aCurr = aCurr.next;
+                bCurr = bCurr.next;
+            }
+            return aCurr;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="head"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static ListNode RemoveElements(ListNode head, int val)
+        {
+            if (head == null) return null;
+            ListNode newList = new ListNode();
+            ListNode curr = newList;
+            while (head != null)
+            {
+                if (head.val != val)
+                {
+                    curr.next = head;
+                    curr = curr.next;
+                }
+                head = head.next;
+            }
+            curr.next = null;
+            return newList.next;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static bool IsPalindrome(ListNode head)
+        {
+            int length = GetLength(head);
+            if (length == 0 || length == 1) return false;
+            int mid = length / 2;
+            ListNode secondHalfList = null;
+            ListNode curr = head;
+            while (mid-1 > 0)
+            {
+                curr = curr.next;
+                mid--;
+            }
+            if (length % 2 == 0)
+            {
+                secondHalfList = curr.next;
+                curr.next = null;
+            }
+            else
+            {
+                secondHalfList = curr.next.next;
+                curr.next = null;
+            }
+
+            secondHalfList = ReverseList(secondHalfList);
+            while (secondHalfList != null)
+            {
+                if (head.val != secondHalfList.val)
+                {
+                    return false;
+                }
+                head = head.next;
+                secondHalfList = secondHalfList.next;
+            }
+            return true;
+        }
     }
 }
