@@ -203,40 +203,29 @@ namespace DS_and_Algo.problems
         public static ListNode RotateRight(ListNode head, int k)
         {
             if (head == null || head.next == null) return head;
-            if (k == 0) return head;
             int length = GetLength(head);
-            int newListEndIndex;
-            if (k < length)
+            if (k == length) return head;
+            if (k > length)
             {
-                newListEndIndex = length - k;
+                k = k % length;
             }
-            else if (length == k)
-            {
-                return head;
-            }
-            else
-            {
-                newListEndIndex = length - (k % length);
-            }
-
-            if (length == newListEndIndex) return head;
+            if (k == 0) return head;
 
             ListNode curr = head;
-            while (newListEndIndex > 1)
+            int noOfPosToMove = length - k - 1;
+            while (noOfPosToMove-- > 0)
             {
                 curr = curr.next;
-                newListEndIndex--;
             }
-
-            ListNode newHead = curr.next;
+            ListNode newListHead = curr.next;
             curr.next = null;
-            curr = newHead;
-            while (curr.next != null)
+            curr = newListHead;
+            while(curr.next != null)
             {
                 curr = curr.next;
             }
             curr.next = head;
-            return newHead;
+            return newListHead;
         }
 
         private static int GetLength(ListNode head)
@@ -453,30 +442,32 @@ namespace DS_and_Algo.problems
         public static Node CopyRandomListHashingSolution(Node head)
         {
             if (head == null) return null;
-
-            Dictionary<Node, Node> oldNewNodeMap = new Dictionary<Node, Node>();
-            Node iter = head;
-            while (iter != null)
+            Node copiedList = new Node(0);
+            Node oldNodeCurr = head;
+            Dictionary<Node, Node> oldNewMap = new Dictionary<Node, Node>();
+            while(oldNodeCurr!=null)
             {
-                oldNewNodeMap.Add(iter, new Node(iter.val));
-                iter = iter.next;
+                copiedList.next = new Node(oldNodeCurr.val);
+                copiedList = copiedList.next;
+                oldNewMap.Add(oldNodeCurr, copiedList);
+                oldNodeCurr = oldNodeCurr.next;
             }
 
-            iter = head;
-            while (iter != null)
+            oldNodeCurr = head;
+            while (oldNodeCurr !=null)
             {
-                if (iter.next != null)
+                if(oldNodeCurr.random == null)
                 {
-                    oldNewNodeMap.TryGetValue(iter.next, out oldNewNodeMap[iter].next);
+                    oldNewMap[oldNodeCurr].random = null;
                 }
-
-                if (iter.random != null)
+                else
                 {
-                    oldNewNodeMap.TryGetValue(iter.random, out oldNewNodeMap[iter].random);
+                    oldNewMap[oldNodeCurr].random = oldNewMap[oldNodeCurr.random];
                 }
-                iter = iter.next;
+                oldNodeCurr = oldNodeCurr.next;
             }
-            return oldNewNodeMap[head];
+
+            return oldNewMap[head];
         }
 
         /*
