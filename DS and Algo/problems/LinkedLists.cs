@@ -220,7 +220,7 @@ namespace DS_and_Algo.problems
             ListNode newListHead = curr.next;
             curr.next = null;
             curr = newListHead;
-            while(curr.next != null)
+            while (curr.next != null)
             {
                 curr = curr.next;
             }
@@ -445,7 +445,7 @@ namespace DS_and_Algo.problems
             Node copiedList = new Node(0);
             Node oldNodeCurr = head;
             Dictionary<Node, Node> oldNewMap = new Dictionary<Node, Node>();
-            while(oldNodeCurr!=null)
+            while (oldNodeCurr != null)
             {
                 copiedList.next = new Node(oldNodeCurr.val);
                 copiedList = copiedList.next;
@@ -454,9 +454,9 @@ namespace DS_and_Algo.problems
             }
 
             oldNodeCurr = head;
-            while (oldNodeCurr !=null)
+            while (oldNodeCurr != null)
             {
-                if(oldNodeCurr.random == null)
+                if (oldNodeCurr.random == null)
                 {
                     oldNewMap[oldNodeCurr].random = null;
                 }
@@ -468,6 +468,47 @@ namespace DS_and_Algo.problems
             }
 
             return oldNewMap[head];
+        }
+
+        /// <summary>
+        /// Same above problem, without extra space
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static Node CopyRandomListWithoutExtraSpace(Node head)
+        {
+            if (head == null) return head;
+            Node curr = head;
+            while (curr != null)
+            {
+                Node next = curr.next;
+                Node copyNode = new Node(curr.val);
+                curr.next = copyNode;
+                copyNode.next = next;
+                curr = next;
+            }
+
+            curr = head;
+            while (curr != null)
+            {
+                if (curr.random != null)
+                {
+                    curr.next.random = curr.random.next;
+                }
+                curr = curr.next.next;
+            }
+
+            curr = head;
+            Node newHead = new Node(0);
+            Node newHeadCurr = newHead;
+            while (curr != null)
+            {
+                newHeadCurr.next = curr.next;
+                curr.next = curr.next.next;
+                curr = curr.next;
+                newHeadCurr = newHeadCurr.next;
+            }
+            return newHead.next;
         }
 
         /*
@@ -736,7 +777,7 @@ namespace DS_and_Algo.problems
             int mid = length / 2;
             ListNode secondHalfList = null;
             ListNode curr = head;
-            while (mid-1 > 0)
+            while (mid - 1 > 0)
             {
                 curr = curr.next;
                 mid--;
