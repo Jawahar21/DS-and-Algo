@@ -805,5 +805,44 @@ namespace DS_and_Algo.problems
             }
             return true;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static DLNode Flatten(DLNode head)
+        {
+            DLNode curr = head;
+            while (curr != null)
+            {
+                DLNode endOfChild = null;
+
+                if (curr.child != null)
+                {
+                    endOfChild = curr.child;
+                    while (endOfChild.next != null)
+                    {
+                        endOfChild = endOfChild.next;
+                    }
+                }
+
+
+                if (endOfChild != null)
+                {
+                    DLNode next = curr.next;
+                    curr.child.prev = curr;
+                    curr.next = curr.child;
+                    endOfChild.next = next;
+                    if (next != null)
+                    {
+                        next.prev = endOfChild;
+                    }
+                    curr.child = null;
+                }
+                curr = curr.next;
+            }
+            return head;
+        }
     }
 }

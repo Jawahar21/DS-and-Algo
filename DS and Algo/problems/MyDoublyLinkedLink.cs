@@ -9,6 +9,7 @@ namespace DS_and_Algo.problems
         public int val;
         public DLNode prev;
         public DLNode next;
+        public DLNode child;
 
         public DLNode(int val)
         {
