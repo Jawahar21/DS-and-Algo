@@ -25,7 +25,7 @@ namespace DS_and_Algo.problems
                 if ((mid + 1) > (x / (mid + 1))) return mid;
                 else { low = mid + 1; }
             }
-            
+
         }
 
         /// <summary>
@@ -53,6 +53,64 @@ namespace DS_and_Algo.problems
                 if (guessResult == 1) low = mid + 1;
             }
             return 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static int Search(int[] nums, int target)
+        {
+            if (nums.Length == 1)
+            {
+                if (nums[0] == target) return 0;
+                return -1;
+            }
+
+            int low = 0, high = nums.Length - 1;
+            while (low < high)
+            {
+                int mid = low + (high - low) / 2;
+                if (nums[mid] > nums[high]) low = mid + 1;
+                else
+                {
+                    high = mid;
+                }
+            }
+            int pivot = low;
+            if (pivot == 0)
+            {
+                return BinarySearchMethod(nums, 0, nums.Length - 1, target);
+            }
+            if (nums[pivot] <= target && target <= nums[nums.Length - 1])
+            {
+                return BinarySearchMethod(nums, pivot, nums.Length - 1, target);
+            }
+            if (nums[0] <= target && target <= nums[pivot - 1])
+            {
+                return BinarySearchMethod(nums, 0, pivot - 1, target);
+            }
+            return -1;
+        }
+
+        public static int BinarySearchMethod(int[] nums, int low, int high, int target)
+        {
+            while (low <= high)
+            {
+                int mid = low + (high - low) / 2;
+                if (nums[mid] == target) return mid;
+                if (target < nums[mid])
+                {
+                    high = mid - 1;
+                }
+                if (target > nums[mid])
+                {
+                    low = mid + 1;
+                }
+            }
+            return -1;
         }
     }
 }
