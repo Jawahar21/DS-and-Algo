@@ -56,7 +56,7 @@ namespace DS_and_Algo.problems
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="nums"></param>
         /// <param name="target"></param>
@@ -111,6 +111,37 @@ namespace DS_and_Algo.problems
                 }
             }
             return -1;
+        }
+
+        /// <summary>
+        /// Input: n = 5, bad = 4
+        /// Output: 4
+        /// Explanation:
+        /// call isBadVersion(3) -> false
+        /// call isBadVersion(5) -> true
+        /// call isBadVersion(4) -> true
+        /// Then 4 is the first bad version.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public int FirstBadVersion(int n)
+        {
+            int low = 1, high = n;
+            while (low < high)
+            {
+                int mid = low + (high - low) / 2;
+                //if (this.IsBadVersion(mid))
+                if (true)
+                {
+                    high = mid;
+                }
+                else
+                {
+                    low = mid + 1;
+                }
+            }
+
+            return low;
         }
     }
 }
