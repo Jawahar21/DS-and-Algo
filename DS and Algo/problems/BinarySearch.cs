@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace DS_and_Algo.problems
@@ -142,6 +143,154 @@ namespace DS_and_Algo.problems
             }
 
             return low;
+        }
+
+        /// <summary>
+        /// A peak element is an element that is strictly greater than its neighbors.
+        /// Given an integer array nums, find a peak element, and return its index.If the array contains multiple peaks, return the index to any of the peaks.
+        /// You may imagine that nums[-1] = nums[n] = -∞.
+        /// 
+        /// Example 1:
+        /// Input: nums = [1,2,3,1]
+        /// Output: 2
+        /// Explanation: 3 is a peak element and your function should return the index number 2.
+        /// Example 2:
+        /// Input: nums = [1,2,1,3,5,6,4]
+        /// Output: 5
+        /// Explanation: Your function can return either index number 1 where the peak element is 2, or index number 5 where the
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static int FindPeakElement(int[] nums)
+        {
+            int low = 0, high = nums.Length - 1;
+            while (low + 1 < high)
+            {
+                int mid = low + (high - low) / 2;
+                if (nums[mid - 1] < nums[mid])
+                {
+                    low = mid;
+                }
+                else
+                {
+                    high = mid;
+                }
+            }
+
+            if (nums[low] < nums[high]) return high;
+            return low;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static int[] SearchRange(int[] nums, int target)
+        {
+            int low = 0, high = nums.Length - 1;
+            int[] res = new int[2] { -1, -1 };
+            while (low + 1 < high)
+            {
+                int mid = low + (high - low) / 2;
+                if (nums[mid] < target)
+                {
+                    low = mid;
+                }
+                else
+                {
+                    high = mid;
+                }
+            }
+            if (nums[low] == target) res[0] = low;
+            else if (nums[high] == target) res[0] = high;
+
+            low = 0; high = nums.Length - 1;
+            while (low + 1 < high)
+            {
+                int mid = low + (high - low) / 2;
+                if (nums[mid] > target)
+                {
+                    high = mid;
+                }
+                else
+                {
+                    low = mid;
+                }
+            }
+            if (nums[low] == target) res[1] = low;
+            else if (nums[high] == target) res[1] = high;
+            return res;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="k"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static IList<int> FindClosestElements(int[] arr, int k, int x)
+        {
+            if (arr.Length == 1) return new List<int>() { arr[0] };
+            int low = 0, high = arr.Length - 1;
+            while (low + 1 < high)
+            {
+                int mid = low + (high - low) / 2;
+                if (arr[mid] < x)
+                {
+                    low = mid;
+                }
+                else
+                {
+                    high = mid;
+                }
+            }
+            int closerNumIndex = GetCloserNumIndex(arr, low, high, x);
+            int left = closerNumIndex - 1;
+            int right = closerNumIndex + 1;
+            List<int> res = new List<int>();
+            res.Add(arr[closerNumIndex]);
+            k--;
+            while (k-- > 0)
+            {
+                if (left >= 0 && right < arr.Length)
+                {
+                    closerNumIndex = GetCloserNumIndex(arr, left, right, x);
+                    if(closerNumIndex == left)
+                    {
+                        left--;
+                    }
+                    else
+                    {
+                        right++;
+                    }
+                    res.Add(arr[closerNumIndex]);
+                }
+                else if (left >= 0) 
+                {
+                    res.Add(arr[left--]);
+                }
+                else
+                {
+                    res.Add(arr[right++]);
+                }
+            }
+            res.Sort();
+            return res;
+        }
+
+        private static int GetCloserNumIndex(int[] arr, int a, int b, int x)
+        {
+            if (Math.Abs(arr[a] - x) < Math.Abs(arr[b] - x) || ((Math.Abs(arr[a] - x) == Math.Abs(arr[b] - x)) && arr[a] < arr[b]))
+            {
+                return a;
+            }
+            else
+            {
+                return b;
+            }
         }
     }
 }
