@@ -225,7 +225,7 @@ namespace DS_and_Algo.problems
         }
 
         /// <summary>
-        /// 
+        /// TODO: Understand this solution
         /// </summary>
         /// <param name="arr"></param>
         /// <param name="k"></param>
@@ -233,63 +233,208 @@ namespace DS_and_Algo.problems
         /// <returns></returns>
         public static IList<int> FindClosestElements(int[] arr, int k, int x)
         {
-            if (arr.Length == 1) return new List<int>() { arr[0] };
-            int low = 0, high = arr.Length - 1;
-            while (low + 1 < high)
+            int left = 0;
+            int right = arr.Length - k;
+
+            while (left < right)
+            {
+                int mid = left + (right - left) / 2;
+
+                if (x - arr[mid] > arr[mid + k] - x)
+                {
+                    left = mid + 1;
+                }
+                else
+                {
+                    right = mid;
+                }
+            }
+            int[] result = new int[k];
+            for (int i = 0; i < k; i++)
+            {
+                result[i] = arr[left + i];
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static bool IsPerfectSquare(int num)
+        {
+            if (num == 1) return true;
+            int low = 1, high = num / 2;
+            while (low <= high)
             {
                 int mid = low + (high - low) / 2;
-                if (arr[mid] < x)
+                if (num / mid == mid) return true;
+                if (num / mid < mid) { high = mid - 1; }
+                else { low = mid + 1; }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="letters"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static char NextGreatestLetter(char[] letters, char target)
+        {
+            if (letters[0] > target) return letters[0];
+            int low = 0, high = letters.Length - 1;
+            while (low < high)
+            {
+                int mid = low + (high - low) / 2;
+                if (letters[mid] > target) high = mid;
+                else low = mid + 1;
+            }
+            if (low == letters.Length - 1)
+            {
+                if (!(letters[low] > target)) return letters[0];
+            }
+            return letters[low];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static int FindMin(int[] nums)
+        {
+            int low = 0, high = nums.Length - 1;
+            while (low < high)
+            {
+                int mid = low + (high - low) / 2;
+                if (nums[mid] > nums[high])
                 {
-                    low = mid;
+                    low = mid + 1;
                 }
                 else
                 {
                     high = mid;
                 }
             }
-            int closerNumIndex = GetCloserNumIndex(arr, low, high, x);
-            int left = closerNumIndex - 1;
-            int right = closerNumIndex + 1;
-            List<int> res = new List<int>();
-            res.Add(arr[closerNumIndex]);
-            k--;
-            while (k-- > 0)
+            return nums[low];
+        }
+
+        /// <summary>
+        /// Ex = [2,2,2,0,1,2], [1,3,4], [1,3,3], [3,1,1]
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static int FindMinWithDuplicatesInSortedArray(int[] nums)
+        {
+            int low = 0, high = nums.Length - 1;
+            while (low < high)
             {
-                if (left >= 0 && right < arr.Length)
+                int mid = low + (high - low) / 2;
+                if (nums[mid] > nums[high])
                 {
-                    closerNumIndex = GetCloserNumIndex(arr, left, right, x);
-                    if(closerNumIndex == left)
-                    {
-                        left--;
-                    }
-                    else
-                    {
-                        right++;
-                    }
-                    res.Add(arr[closerNumIndex]);
+                    low = mid + 1;
                 }
-                else if (left >= 0) 
+                else if (nums[mid] < nums[low])
                 {
-                    res.Add(arr[left--]);
+                    high = mid;
+                    low++;
+                }
+                else if (nums[low] < nums[mid])
+                {
+                    high = mid;
                 }
                 else
                 {
-                    res.Add(arr[right++]);
+                    high--;
                 }
             }
-            res.Sort();
-            return res;
+            return nums[low];
         }
 
-        private static int GetCloserNumIndex(int[] arr, int a, int b, int x)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nums1"></param>
+        /// <param name="nums2"></param>
+        /// <returns></returns>
+        public int[] Intersection(int[] nums1, int[] nums2)
         {
-            if (Math.Abs(arr[a] - x) < Math.Abs(arr[b] - x) || ((Math.Abs(arr[a] - x) == Math.Abs(arr[b] - x)) && arr[a] < arr[b]))
+            HashSet<int> set = new HashSet<int>(nums1);
+            List<int> res = new List<int>();
+            foreach (int num in nums2)
             {
-                return a;
+                if (set.Contains(num))
+                {
+                    res.Add(num);
+                    set.Remove(num);
+                }
             }
-            else
+            return res.ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nums1"></param>
+        /// <param name="nums2"></param>
+        /// <returns></returns>
+        public int[] IntersectWithDuplicates(int[] nums1, int[] nums2)
+        {
+            Dictionary<int, int> countArray = new Dictionary<int, int>();
+            for(int i = 0; i < nums1.Length; i++)
             {
-                return b;
+                if (countArray.ContainsKey(nums1[i]))
+                {
+                    countArray[nums1[i]]++;
+                }
+                else
+                {
+                    countArray.Add(nums1[i], 1);
+                }
+            }
+            List<int> res = new List<int>();
+            for (int i = 0; i < nums2.Length; i++)
+            {
+                if (countArray.ContainsKey(nums2[i]))
+                {
+                    res.Add(nums2[i]);
+                    if (countArray[nums2[i]] == 1)
+                    {
+                        countArray.Remove(nums2[i]);
+                    }
+                    else
+                    {
+                        countArray[nums2[i]]--;
+                    }
+                }
+            }
+            return res.ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="numbers"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public int[] TwoSum(int[] numbers, int target)
+        {
+            int low = 0, high = numbers.Length - 1;
+            while(true)
+            {
+                int sum = numbers[low] + numbers[high];
+                if (sum == target) return new int[2] { low + 1, high + 1 };
+                else if(sum > target)
+                {
+                    high--;
+                }
+                else
+                {
+                    low++;
+                }
             }
         }
     }
