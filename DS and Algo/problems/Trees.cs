@@ -156,5 +156,113 @@ namespace DS_and_Algo.problems
 
             return 1 + Math.Min(MinDepth(root.left), MinDepth(root.right));
         }
+
+        public IList<int> PreorderTraversal(TreeNode root)
+        {
+            IList<int> values = new List<int>();
+            PreorderTraversalRecursive(root, values);
+            return values;
+        }
+
+        private void PreorderTraversalRecursive(TreeNode root, IList<int> values)
+        {
+            if (root == null) return;
+            values.Add(root.val);
+            PreorderTraversalRecursive(root.left, values);
+            PreorderTraversalRecursive(root.right, values);
+        }
+
+        public IList<int> PreorderTraversalIterative(TreeNode root)
+        {
+            if (root == null) return new List<int>();
+            IList<int> values = new List<int>();
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            stack.Push(root);
+            while (stack.Count > 0)
+            {
+                TreeNode curr = stack.Pop();
+                values.Add(curr.val);
+                if (curr.right != null) stack.Push(curr.right);
+                if (curr.left != null) stack.Push(curr.left);
+            }
+            return values;
+        }
+
+        public static IList<int> InorderTraversalIterative(TreeNode root)
+        {
+            if (root == null) return new List<int>();
+            IList<int> values = new List<int>();
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            stack.Push(root);
+            TreeNode curr = root;
+            while (stack.Count > 0)
+            {
+                while (curr != null && curr.left != null)
+                {
+                    curr = curr.left;
+                    stack.Push(curr);
+                }
+
+                TreeNode elem = stack.Pop();
+                values.Add(elem.val);
+                curr = elem.right;
+                if (curr != null)
+                {
+                    stack.Push(curr);
+                }
+            }
+            return values;
+        }
+
+        public static IList<int> PostorderTraversalIterative(TreeNode root)
+        {
+            if (root == null) return new List<int>();
+            IList<int> values = new List<int>();
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            Stack<TreeNode> stack2 = new Stack<TreeNode>();
+            stack.Push(root);
+            while (stack.Count > 0)
+            {
+                TreeNode curr = stack.Pop();
+                stack2.Push(curr);
+                if (curr.left != null) stack.Push(curr.left);
+                if (curr.right != null) stack.Push(curr.right);
+            }
+            while (stack2.Count > 0)
+            {
+                values.Add(stack2.Pop().val);
+            }
+            return values;
+        }
+
+        public IList<int> InorderTraversal(TreeNode root)
+        {
+            IList<int> values = new List<int>();
+            InorderTraversalRecursive(root, values);
+            return values;
+        }
+
+        private void InorderTraversalRecursive(TreeNode root, IList<int> values)
+        {
+            if (root == null) return;
+            InorderTraversalRecursive(root.left, values);
+            values.Add(root.val);
+            InorderTraversalRecursive(root.right, values);
+        }
+
+        public IList<int> PostorderTraversal(TreeNode root)
+        {
+            IList<int> values = new List<int>();
+            PostorderTraversalRecursive(root, values);
+            return values;
+        }
+
+        private void PostorderTraversalRecursive(TreeNode root, IList<int> values)
+        {
+            if (root == null) return;
+            PostorderTraversalRecursive(root.left, values);
+            PostorderTraversalRecursive(root.right, values);
+            values.Add(root.val);
+        }
     }
 }
