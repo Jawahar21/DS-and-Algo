@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,6 +10,8 @@ namespace DS_and_Algo.problems
         public int val;
         public TreeNode left;
         public TreeNode right;
+        public TreeNode next;
+
         public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
         {
             this.val = val;
@@ -71,6 +74,38 @@ namespace DS_and_Algo.problems
             if (root == null) return true;
 
             return IsMirror(root.left, root.right);
+        }
+
+        public static bool IsSymmetricIterative(TreeNode root)
+        {
+            if (root == null) return true;
+            Queue<TreeNode> leftQueue = new Queue<TreeNode>();
+            Queue<TreeNode> rightQueue = new Queue<TreeNode>();
+            leftQueue.Enqueue(root.left);
+            rightQueue.Enqueue(root.right);
+
+            while (leftQueue.Count > 0 && rightQueue.Count > 0)
+            {
+                TreeNode left = leftQueue.Dequeue();
+                TreeNode right = rightQueue.Dequeue();
+                if (left?.val != right?.val)
+                {
+                    return false;
+                }
+                if (left != null)
+                {
+                    leftQueue.Enqueue(left.left);
+                    leftQueue.Enqueue(left.right);
+                }
+                if (right != null)
+                {
+                    rightQueue.Enqueue(right.right);
+                    rightQueue.Enqueue(right.left);
+                }
+            }
+
+            if (leftQueue.Count == 0 && rightQueue.Count == 0) return true;
+            return false;
         }
 
         private static bool IsMirror(TreeNode left, TreeNode right)
@@ -263,6 +298,90 @@ namespace DS_and_Algo.problems
             PostorderTraversalRecursive(root.left, values);
             PostorderTraversalRecursive(root.right, values);
             values.Add(root.val);
+        }
+
+        public IList<IList<int>> LevelOrder(TreeNode root)
+        {
+            IList<IList<int>> result = new List<IList<int>>();
+            if (root == null) return result;
+
+            GetLevelOrder(result, root, 0);
+            return result;
+        }
+
+        private void GetLevelOrder(IList<IList<int>> result, TreeNode root, int level)
+        {
+            if (root == null) return;
+
+            if (result.Count == level) result.Add(new List<int>());
+
+            result[level].Add(root.val);
+
+            GetLevelOrder(result, root.left, level + 1);
+            GetLevelOrder(result, root.right, level + 1);
+        }
+
+        /// <summary>
+        /// Given the root of a binary tree and an integer targetSum, 
+        /// return true if the tree has a root-to-leaf path such that adding up all the values along the path equals targetSum.
+        /// A leaf is a node with no children.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="targetSum"></param>
+        /// <returns></returns>
+        public bool HasPathSum(TreeNode root, int targetSum)
+        {
+            bool hasPathSum = false;
+            CalculatePathSum(root, 0, targetSum, ref hasPathSum);
+            return hasPathSum;
+        }
+
+        public void CalculatePathSum(TreeNode root, int sum, int targetSum, ref bool hasPathSum)
+        {
+            if (root == null) return;
+            sum = sum + root.val;
+            if (root.left == null && root.right == null && sum == targetSum) { hasPathSum = true; return; }
+            CalculatePathSum(root.left, sum, targetSum, ref hasPathSum);
+            CalculatePathSum(root.right, sum, targetSum, ref hasPathSum);
+        }
+
+        /// <summary>
+        /// You are given a perfect binary tree where all leaves are on the same level, and every parent has two children.
+        /// The binary tree has the following definition:
+        /// struct Node {
+        ///     int val;
+        ///     Node* left;
+        ///     Node* right;
+        ///     Node* next;
+        /// }
+        /// Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+        /// Initially, all next pointers are set to NULL.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public TreeNode Connect(TreeNode root)
+        {
+            if (root == null) return root;
+            Queue<TreeNode> queue = new Queue<TreeNode>();
+            if (root.left != null) queue.Enqueue(root.left);
+            if (root.right != null) queue.Enqueue(root.right);
+            while (queue.Count > 0)
+            {
+                int noOfElemToBeRemoved = queue.Count - 1;
+                while (noOfElemToBeRemoved-- > 0)
+                {
+                    TreeNode curr = queue.Dequeue();
+                    curr.next = queue.Peek();
+
+                    if (curr.left != null) queue.Enqueue(curr.left);
+                    if (curr.right != null) queue.Enqueue(curr.right);
+                }
+
+                TreeNode end = queue.Dequeue();
+                if (end.left != null) queue.Enqueue(end.left);
+                if (end.right != null) queue.Enqueue(end.right);
+            }
+            return root;
         }
     }
 }
