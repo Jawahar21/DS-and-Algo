@@ -383,5 +383,49 @@ namespace DS_and_Algo.problems
             }
             return root;
         }
+
+        public TreeNode ConnectWithoutQueue(TreeNode root)
+        {
+            if (root == null) return root;
+            TreeNode levelStart = root;
+            while (levelStart != null)
+            {
+                TreeNode curr = levelStart;
+                while (curr != null)
+                {
+                    if (curr.left != null) curr.left.next = curr.right;
+                    if (curr.right != null && curr.next != null) curr.right.next = curr.next.left;
+
+                    curr = curr.next;
+                }
+                levelStart = levelStart.left;
+            }
+            return root;
+        }
+
+        public TreeNode LowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q)
+        {
+            List<TreeNode> pTreePath = new List<TreeNode>();
+            List<TreeNode> qTreePath = new List<TreeNode>();
+
+            findNode(root, pTreePath, p.val);
+            findNode(root, qTreePath, p.val);
+
+            List<TreeNode> intersectionList =  pTreePath.Intersect<TreeNode>(qTreePath).ToList();
+            return intersectionList[intersectionList.Count - 1];
+        }
+
+        private bool findNode(TreeNode root, List<TreeNode> pathNodes, int requiredVal)
+        {
+            if (root == null) return false;
+            if (root.val == requiredVal) return true;
+
+            bool isNodeFound = findNode(root.left, pathNodes, requiredVal) || findNode(root.next, pathNodes, requiredVal);
+            if (isNodeFound)
+            {
+                pathNodes.Add(root);
+            }
+            return isNodeFound;
+        }
     }
 }
