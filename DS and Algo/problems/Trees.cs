@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace DS_and_Algo.problems
 {
@@ -411,7 +412,7 @@ namespace DS_and_Algo.problems
             findNode(root, pTreePath, p.val);
             findNode(root, qTreePath, p.val);
 
-            List<TreeNode> intersectionList =  pTreePath.Intersect<TreeNode>(qTreePath).ToList();
+            List<TreeNode> intersectionList = pTreePath.Intersect<TreeNode>(qTreePath).ToList();
             return intersectionList[intersectionList.Count - 1];
         }
 
@@ -426,6 +427,68 @@ namespace DS_and_Algo.problems
                 pathNodes.Add(root);
             }
             return isNodeFound;
+        }
+
+
+        // Encodes a tree to a single string.
+        public static string Serialize(TreeNode root)
+        {
+            if (root == null) return "";
+            StringBuilder sb = new StringBuilder();
+
+            Queue<TreeNode> queue = new Queue<TreeNode>();
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                TreeNode curr = queue.Dequeue();
+                sb.Append("," + curr?.val ?? " ");
+
+                if (curr != null)
+                {
+                    queue.Enqueue(curr.left);
+                    queue.Enqueue(curr.right);
+                }
+            }
+            return sb.Remove(0, 1).ToString();
+        }
+
+        // Decodes your encoded data to tree.
+        public static TreeNode Deserialize(string data)
+        {
+            List<string> nodes = data.Split(',').ToList();
+            if (nodes.Count == 1 && string.IsNullOrEmpty(nodes[0])) return null;
+            Queue<TreeNode> queue = new Queue<TreeNode>();
+            TreeNode root = new TreeNode(int.Parse(nodes[0]));
+            queue.Enqueue(root);
+
+            int i = 1;
+            while(queue.Count > 0)
+            {
+                TreeNode curr = queue.Dequeue();
+                if (curr != null)
+                {
+                    TreeNode left = null, right = null;
+                    if(!string.IsNullOrEmpty(nodes[i]))
+                    {
+                        left = new TreeNode(int.Parse(nodes[i++]));
+                    }
+                    else { i++; }
+
+                    if (!string.IsNullOrEmpty(nodes[i]))
+                    {
+                        right = new TreeNode(int.Parse(nodes[i++]));
+                    }
+                    else { i++; }
+
+                    curr.left = left;
+                    queue.Enqueue(left);
+
+
+                    curr.right = right;
+                    queue.Enqueue(right);
+                }
+            }
+            return root;
         }
     }
 }
