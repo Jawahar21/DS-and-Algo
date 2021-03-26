@@ -462,13 +462,13 @@ namespace DS_and_Algo.problems
             queue.Enqueue(root);
 
             int i = 1;
-            while(queue.Count > 0)
+            while (queue.Count > 0)
             {
                 TreeNode curr = queue.Dequeue();
                 if (curr != null)
                 {
                     TreeNode left = null, right = null;
-                    if(!string.IsNullOrEmpty(nodes[i]))
+                    if (!string.IsNullOrEmpty(nodes[i]))
                     {
                         left = new TreeNode(int.Parse(nodes[i++]));
                     }
@@ -489,6 +489,38 @@ namespace DS_and_Algo.problems
                 }
             }
             return root;
+        }
+
+        /// <summary>
+        /// Check if tree is a BST
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static bool IsValidBST(TreeNode root)
+        {
+            if (root.left == null && root.right == null) return true;
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            TreeNode prev = null;
+            stack.Push(root);
+            TreeNode curr = root;
+            while (stack.Count > 0)
+            {
+                while (curr != null && curr.left != null)
+                {
+                    curr = curr.left;
+                    stack.Push(curr);
+                }
+
+                TreeNode elem = stack.Pop();
+                if (prev != null && elem.val <= prev.val) return false;
+                prev = elem;
+                curr = elem.right;
+                if (curr != null)
+                {
+                    stack.Push(curr);
+                }
+            }
+            return true;
         }
     }
 }
