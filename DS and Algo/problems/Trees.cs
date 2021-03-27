@@ -522,5 +522,127 @@ namespace DS_and_Algo.problems
             }
             return true;
         }
+
+        /// <summary>
+        /// Search in a BST
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public TreeNode SearchBSTRecursive(TreeNode root, int val)
+        {
+            if (root == null) return root;
+            if (root.val == val) return root;
+
+            if (root.val < val) return SearchBSTRecursive(root.right, val);
+            return SearchBSTRecursive(root.left, val);
+        }
+
+        /// <summary>
+        /// Search in a BST
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public TreeNode SearchBST(TreeNode root, int val)
+        {
+            if (root == null) return root;
+            while (root != null)
+            {
+                if (root.val == val) return root;
+
+                if (root.val < val) root = root.right;
+                else root = root.left;
+            }
+            return root;
+        }
+
+        /// <summary>
+        /// Insert into BST
+        /// It is guaranteed that the new value does not exist in the original BST.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public TreeNode InsertIntoBST(TreeNode root, int val)
+        {
+            if (root == null) return new TreeNode(val);
+
+            TreeNode curr = root;
+            while (true)
+            {
+                if (curr.val < val)
+                {
+                    if (curr.right == null)
+                    {
+                        curr.right = new TreeNode(val);
+                        return root;
+                    }
+                    else
+                    {
+                        curr = curr.right;
+                    }
+                }
+                else
+                {
+                    if (curr.left == null)
+                    {
+                        curr.left = new TreeNode(val);
+                        return root;
+                    }
+                    else
+                    {
+                        curr = curr.left;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delete node in BST tree
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public TreeNode DeleteNode(TreeNode root, int key)
+        {
+            if (root == null) return null;
+            TreeNode prev = null;
+            TreeNode curr = root;
+            while(curr != null)
+            {
+                if (curr.val < key) curr = curr.right;
+                if (curr.val > key) curr = curr.left;
+            }
+            return root;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        private TreeNode GetAndRemoveInorderSuccessor(TreeNode root)
+        {
+            if (root == null) return root;
+            TreeNode prev = root;
+            if (root.right != null)
+            {
+                root = root.right;
+                if (root.left == null)
+                {
+                    prev.right = prev.right.right;
+                    return root;
+                }
+
+                while (root.left != null)
+                {
+                    prev = root;
+                    root = root.left;
+                }
+                prev.left = null;
+            }
+            return root;
+        }
     }
 }
