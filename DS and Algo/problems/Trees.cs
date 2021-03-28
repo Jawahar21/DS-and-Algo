@@ -492,6 +492,37 @@ namespace DS_and_Algo.problems
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public static TreeNode ConstructBTreeFromInorderAndPostOrderRecursive(int[] inorder, int[] postorder)
+        {
+            if (inorder.Length == 0) return null;
+
+            if (inorder.Length == 1) return new TreeNode(postorder[0]);
+            TreeNode root = new TreeNode(postorder[postorder.Length - 1]);
+            int index = Array.FindIndex(inorder, item => item == postorder[postorder.Length - 1]);
+            root.left = ConstructBTreeFromInorderAndPostOrderRecursive(inorder[0..(index)], postorder[0..(index)]);
+            root.right = ConstructBTreeFromInorderAndPostOrderRecursive(inorder[(index + 1)..inorder.Length],
+                postorder[(index)..(inorder.Length - 1)]);
+            return root;
+        }
+
+        public static TreeNode ConstructBTreeFromPreOrderAndInOrderRecursive(int[] preorder, int[] inorder)
+        {
+            if (preorder.Length == 0) return null;
+
+            if (preorder.Length == 1) return new TreeNode(preorder[0]);
+            TreeNode root = new TreeNode(preorder[0]);
+            int index = Array.FindIndex(inorder, item => item == preorder[0]);
+            root.left = ConstructBTreeFromPreOrderAndInOrderRecursive(preorder[1..(index + 1)], inorder[0..(index)]);
+            root.right = ConstructBTreeFromPreOrderAndInOrderRecursive(preorder[(index + 1)..preorder.Length],
+                inorder[(index + 1)..(inorder.Length)]);
+            return root;
+        }
+
+        #region BST 
+
+        /// <summary>
         /// Check if tree is a BST
         /// </summary>
         /// <param name="root"></param>
@@ -609,27 +640,27 @@ namespace DS_and_Algo.problems
             if (root == null) return null;
             TreeNode curr = root;
 
-            while(curr != null && curr.val != key)
+            while (curr != null && curr.val != key)
             {
                 if (curr.val == key) return DeleteRootNode(curr);
 
-                if(curr.left?.val == key)
+                if (curr.left?.val == key)
                 {
                     curr.left = DeleteRootNode(curr.left);
                 }
 
-                if(curr.right?.val == key)
+                if (curr.right?.val == key)
                 {
                     curr.right = DeleteRootNode(curr.right);
                 }
 
                 if (curr.val < key) curr = curr.right;
                 else curr = curr.left;
-            }  
+            }
             return root;
         }
 
-        
+
         private TreeNode DeleteRootNode(TreeNode root)
         {
             if (root == null) return null;
@@ -640,19 +671,21 @@ namespace DS_and_Algo.problems
 
             TreeNode prev = null;
             TreeNode curr = root.right;
-            
-            while(curr.left != null)
+
+            while (curr.left != null)
             {
                 prev = curr;
                 curr = curr.left;
             }
             curr.left = root.left;
-            if(root.right != curr)
+            if (root.right != curr)
             {
                 prev.left = curr.right;
                 curr.right = root.right;
             }
             return curr;
         }
+
+        #endregion
     }
 }
