@@ -607,42 +607,52 @@ namespace DS_and_Algo.problems
         public TreeNode DeleteNode(TreeNode root, int key)
         {
             if (root == null) return null;
-            TreeNode prev = null;
             TreeNode curr = root;
-            while(curr != null)
+
+            while(curr != null && curr.val != key)
             {
+                if (curr.val == key) return DeleteRootNode(curr);
+
+                if(curr.left?.val == key)
+                {
+                    curr.left = DeleteRootNode(curr.left);
+                }
+
+                if(curr.right?.val == key)
+                {
+                    curr.right = DeleteRootNode(curr.right);
+                }
+
                 if (curr.val < key) curr = curr.right;
-                if (curr.val > key) curr = curr.left;
-            }
+                else curr = curr.left;
+            }  
             return root;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="root"></param>
-        /// <returns></returns>
-        private TreeNode GetAndRemoveInorderSuccessor(TreeNode root)
+        
+        private TreeNode DeleteRootNode(TreeNode root)
         {
-            if (root == null) return root;
-            TreeNode prev = root;
-            if (root.right != null)
-            {
-                root = root.right;
-                if (root.left == null)
-                {
-                    prev.right = prev.right.right;
-                    return root;
-                }
+            if (root == null) return null;
 
-                while (root.left != null)
-                {
-                    prev = root;
-                    root = root.left;
-                }
-                prev.left = null;
+            if (root.left == null) return root.right;
+            if (root.right == null) return root.left;
+            if (root.left == null && root.right == null) return null;
+
+            TreeNode prev = null;
+            TreeNode curr = root.right;
+            
+            while(curr.left != null)
+            {
+                prev = curr;
+                curr = curr.left;
             }
-            return root;
+            curr.left = root.left;
+            if(root.right != curr)
+            {
+                prev.left = curr.right;
+                curr.right = root.right;
+            }
+            return curr;
         }
     }
 }
