@@ -410,23 +410,43 @@ namespace DS_and_Algo.problems
             List<TreeNode> qTreePath = new List<TreeNode>();
 
             findNode(root, pTreePath, p.val);
-            findNode(root, qTreePath, p.val);
+            findNode(root, qTreePath, q.val);
 
             List<TreeNode> intersectionList = pTreePath.Intersect<TreeNode>(qTreePath).ToList();
-            return intersectionList[intersectionList.Count - 1];
+            return intersectionList[0];
         }
 
         private bool findNode(TreeNode root, List<TreeNode> pathNodes, int requiredVal)
         {
             if (root == null) return false;
-            if (root.val == requiredVal) return true;
+            if (root.val == requiredVal) { pathNodes.Add(root); return true; }
 
-            bool isNodeFound = findNode(root.left, pathNodes, requiredVal) || findNode(root.next, pathNodes, requiredVal);
+            bool isNodeFound = findNode(root.left, pathNodes, requiredVal) || findNode(root.right, pathNodes, requiredVal);
             if (isNodeFound)
             {
                 pathNodes.Add(root);
             }
             return isNodeFound;
+        }
+
+        public TreeNode LCAWithoutSpace(TreeNode root, TreeNode p, TreeNode q)
+        {
+            if (root == null || p == null || q == null) return null;
+            return FindLCA(root, p.val, q.val);
+        }
+
+        private TreeNode FindLCA(TreeNode root, int p, int q)
+        {
+            if (root == null) return null;
+
+            if (root.val == p || root.val == q) return root;
+
+            TreeNode leftLCA = FindLCA(root.left, p, q);
+            TreeNode rightLCA = FindLCA(root.right, p, q);
+
+            if (leftLCA != null && rightLCA != null) return root;
+
+            return (leftLCA != null) ? leftLCA : rightLCA;
         }
 
 
@@ -684,6 +704,29 @@ namespace DS_and_Algo.problems
                 curr.right = root.right;
             }
             return curr;
+        }
+
+        public TreeNode LowestCommonAncestorBST(TreeNode root, TreeNode p, TreeNode q)
+        {
+            if (root == null) return null;
+            return FindLCAInBST(root, p.val, q.val);
+        }
+
+        public TreeNode FindLCAInBST(TreeNode root, int p, int q)
+        {
+            if (root == null) return null;
+
+            if (root.val == p || root.val == q) return root;
+
+            if (root.val > p && root.val > q)
+            {
+                return FindLCAInBST(root.left, p, q);
+            }
+            else if (root.val < p && root.val < q)
+            {
+                return FindLCAInBST(root.right, p, q);
+            }
+            return root;
         }
 
         #endregion
