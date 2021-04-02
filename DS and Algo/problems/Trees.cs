@@ -749,5 +749,118 @@ namespace DS_and_Algo.problems
         }
 
         #endregion
+
+        #region N array tree
+
+        public IList<int> Preorder(NTreeNode root)
+        {
+            List<int> result = new List<int>();
+            if (root == null) return result;
+            PreorderRecursive(root, result);
+            return result;
+        }
+
+        private void PreorderRecursive(NTreeNode root, IList<int> res)
+        {
+            if (root == null) return;
+
+            res.Add(root.val);
+            foreach (NTreeNode child in root.children)
+            {
+                PreorderRecursive(child, res);
+            }
+        }
+
+        public IList<int> PreorderIterative(NTreeNode root)
+        {
+            List<int> result = new List<int>();
+            if (root == null) return result;
+            Stack<NTreeNode> stack = new Stack<NTreeNode>();
+            stack.Push(root);
+            while (stack.Count > 0)
+            {
+                NTreeNode curr = stack.Pop();
+                result.Add(curr.val);
+
+                for (int i = curr.children?.Count - 1 ?? -1; i >= 0; i--)
+                {
+                    stack.Push(curr.children[i]);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public IList<int> Postorder(NTreeNode root)
+        {
+            IList<int> result = new List<int>();
+            if (root == null) return result;
+            PostOrderRecursice(root, result);
+            return result;
+        }
+
+        private void PostOrderRecursice(NTreeNode root, IList<int> result)
+        {
+            if (root == null) return;
+
+            foreach (NTreeNode child in root.children)
+            {
+                PostOrderRecursice(child, result);
+            }
+            result.Add(root.val);
+        }
+
+        public IList<int> PostorderRecursive(NTreeNode root)
+        {
+            IList<int> result = new List<int>();
+            if (root == null) return result;
+            Stack<NTreeNode> stack = new Stack<NTreeNode>();
+            Stack<NTreeNode> stack2 = new Stack<NTreeNode>();
+            stack.Push(root);
+            while (stack.Count > 0)
+            {
+                NTreeNode curr = stack.Pop();
+                stack2.Push(curr);
+                for (int i = 0; i < (curr.children?.Count ?? 0); i++)
+                {
+                    stack.Push(curr.children[i]);
+                }
+            }
+
+            while (stack2.Count > 0)
+            {
+                result.Add(stack2.Pop().val);
+            }
+            return result;
+        }
+
+        public IList<IList<int>> LevelOrder(NTreeNode root)
+        {
+            IList<IList<int>> result = new List<IList<int>>();
+            if (root == null) return result;
+            GetLevelOrder(root, result, 0);
+            return result;
+        }
+
+        private void GetLevelOrder(NTreeNode root, IList<IList<int>> result, int level)
+        {
+            if (root == null) return;
+
+            if(result.Count == level)
+            {
+                result[level] = new List<int>();
+            }
+
+            result[level].Add(root.val);
+            foreach(NTreeNode child in root.children)
+            {
+                GetLevelOrder(child, result, level + 1);
+            }
+        }
+        #endregion
     }
 }
