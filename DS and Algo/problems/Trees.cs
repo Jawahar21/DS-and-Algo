@@ -729,6 +729,25 @@ namespace DS_and_Algo.problems
             return root;
         }
 
+        public bool IsBalanced(TreeNode root)
+        {
+            bool isBalanced = true;
+            GetHeight(root, ref isBalanced);
+            return isBalanced;
+        }
+
+        private int GetHeight(TreeNode root, ref bool isBalanced)
+        {
+            if (root == null) return 0;
+
+            int heightOfLeftTree = 1 + GetHeight(root.left, ref isBalanced);
+            int heightOfRightTree = 1 + GetHeight(root.next, ref isBalanced);
+
+            if (isBalanced && Math.Abs(heightOfLeftTree - heightOfRightTree) > 1) isBalanced = false;
+
+            return Math.Max(heightOfLeftTree, heightOfRightTree);
+        }
+
         #endregion
     }
 }
